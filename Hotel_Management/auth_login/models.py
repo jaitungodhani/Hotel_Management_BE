@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import (BaseUserManager,AbstractBaseUser)
 import uuid
 
+
 class UserManager(BaseUserManager):
     def create_user(self, username, password,email):
         """
@@ -63,7 +64,7 @@ class User(AbstractBaseUser):
     def get_avatar_path(self, filename):
         ext = filename.split('.')[-1]
         filename = "%s.%s" % (uuid.uuid4(), ext)
-        return 'vp_profile/' + filename
+        return 'Hotel_management_profile/' + filename
 
     username=models.CharField(max_length=100, unique=True)
     email = models.EmailField(
