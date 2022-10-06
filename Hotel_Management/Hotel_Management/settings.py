@@ -44,7 +44,8 @@ INSTALLED_APPS = [
     'cloudinary',
     "corsheaders",
     'rest_framework',
-    'auth_login'
+    'auth_login',
+    'all_api'
 ]
 
 MIDDLEWARE = [
