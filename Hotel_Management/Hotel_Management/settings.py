@@ -157,6 +157,7 @@ USE_I18N = True
 USE_TZ = True
 
 REST_FRAMEWORK = {
+    'EXCEPTION_HANDLER': 'utils_files.exception_handler.custom_exception_handler',
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
