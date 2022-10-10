@@ -34,4 +34,17 @@ class OrderView(ViewSet):
         r=rh.ResponseMsg(data=serilaize_data.data,error=False,msg="Get Successfully!!!")
         return Response(r.response)
 
-    # def create(self,request,forma)
+    def retrieve(self,request,pk=None):
+        all_order_obj=Order.objects.filter(table_id=pk).all()
+        serialize_data=OrderSerializer(all_order_obj,many=True)
+        r=rh.ResponseMsg(data=serialize_data.data,error=False,msg="Get Successfully!!!")
+        return Response(r.response)
+    
+    def create(self,request):
+        serializers=OrderSerializer(data=request.data)
+        if serializers.is_valid():
+            serializers.save(Item_id=request.data["Item_id"])
+            r=rh.ResponseMsg(data=serializers.data,error=False,msg="create Successfully!!!")
+            return Response(r.response)
+        r=rh.ResponseMsg(data={},error=True,msg=serializers.errors)
+        return Response(r.response)

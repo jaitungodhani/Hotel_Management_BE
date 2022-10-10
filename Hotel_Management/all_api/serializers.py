@@ -20,7 +20,7 @@ class ItemSerializer(ModelSerializer):
         fields="__all__"
 
 class OrderSerializer(ModelSerializer):
-    Item=ItemSerializer()
+    Item=ItemSerializer(read_only=True)
     class Meta:
         model=Order
         fields="__all__"
