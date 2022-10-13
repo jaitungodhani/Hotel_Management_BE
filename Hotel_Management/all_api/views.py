@@ -48,3 +48,10 @@ class OrderView(ViewSet):
             return Response(r.response)
         r=rh.ResponseMsg(data={},error=True,msg=serializers.errors)
         return Response(r.response)
+
+    def destroy(self, request, pk=None):
+        obj=Order.objects.get(pk=pk)
+        obj.delete()
+        r=rh.ResponseMsg(data={},error=False,msg="Delete Order Succssfully!!!")
+        return Response(r.response)
+        

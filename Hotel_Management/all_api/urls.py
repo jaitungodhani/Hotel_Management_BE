@@ -8,6 +8,7 @@ router.register('tabledata',TableView,basename='tabledata')
 router.register('categorydata',CategoryView,basename='categorydata')
 router.register('itemdata',ItemView,basename='itemdata')
 router.register('orderdata',OrderView,basename='orderdata')
+router.register('orderdata/<str:pk>/',OrderView,basename='orderdata')
 
 urlpatterns = [
    path('',include(router.urls))
