@@ -34,8 +34,9 @@ class UserAdmin(admin.ModelAdmin):
     change_user_password_template = None
     readonly_fields = ("id", "password")
     search_fields = ["username","email"]
-    list_display =["username","email","is_staff","is_manager","is_owner","is_active"]
-    list_filter= ["is_staff","is_manager","is_owner","is_active"]
+    list_display =["username","email","user_type","is_active"]
+    list_filter= ["user_type","is_active"]
+    list_editable=["user_type"]
     exclude = ('password',)
     change_password_form = AdminPasswordChangeForm
 
