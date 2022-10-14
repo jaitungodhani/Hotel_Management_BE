@@ -1,3 +1,4 @@
+from functools import partial
 from django.shortcuts import render
 from rest_framework.viewsets import ViewSet
 from .serializers import TableSerializer,CategorySerializer,ItemSerializer,OrderSerializer
@@ -45,6 +46,16 @@ class OrderView(ViewSet):
         if serializers.is_valid():
             serializers.save(Item_id=request.data["Item_id"])
             r=rh.ResponseMsg(data=serializers.data,error=False,msg="create Successfully!!!")
+            return Response(r.response)
+        r=rh.ResponseMsg(data={},error=True,msg=serializers.errors)
+        return Response(r.response)
+
+    def update(self,request,pk=None):
+        order_data=Order.objects.filter(pk=pk).first()
+        serializers=OrderSerializer(order_data,request.data,partial=True)
+        if serializers.is_valid():
+            serializers.save()
+            r=rh.ResponseMsg(data=serializers.data,error=False,msg="update Successfully!!!")
             return Response(r.response)
         r=rh.ResponseMsg(data={},error=True,msg=serializers.errors)
         return Response(r.response)
