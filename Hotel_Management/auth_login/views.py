@@ -33,11 +33,10 @@ class LoginView(APIView):
         r=rh.ResponseMsg(data={},error=True,msg="Invalid Credenticials!!!")
         return Response(r.response,status=status.HTTP_401_UNAUTHORIZED)
 
-# class LoginView(TokenObtainPairView):
-#     permission_classes = [AllowAny]
-#     def post(self, request, *args, **kwargs):
-#         response = super().post(request, *args, **kwargs)
-#         response.data['custom_key'] =  'my_custom_data'
-#         r=rh.ResponseMsg(data=response.data,error=False,msg="successfully login!!!!")
-#         return Response(r.response)
+class Is_Login(APIView):
+    def get(self, request, *args, **kwargs):
+        data=request.user
+        serializer=UserSerializer(data)
+        r=rh.ResponseMsg(data=serializer.data,error=False,msg="Login User data get successfully!!!")
+        return Response(r.response)
         

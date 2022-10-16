@@ -5,6 +5,7 @@ from .serializers import TableSerializer,CategorySerializer,ItemSerializer,Order
 from .models import Table,Category,Item,Order
 import utils_files.response_handler as rh
 from rest_framework.response import Response
+
 # Create your views here.
 
 class TableView(ViewSet):
@@ -30,7 +31,7 @@ class ItemView(ViewSet):
 
 class OrderView(ViewSet):
     def list(self,request,format=None):
-        all_order_obj=Order.objects.all()
+        all_order_obj=Order.objects.order_by("-status","create_at").all()
         serilaize_data=OrderSerializer(all_order_obj,many=True)
         r=rh.ResponseMsg(data=serilaize_data.data,error=False,msg="Get Successfully!!!")
         return Response(r.response)
