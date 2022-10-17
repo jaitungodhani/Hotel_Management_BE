@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'cloudinary_storage',
     'rest_framework_simplejwt',
     'django.contrib.staticfiles',
+    'django_filters',
     'cloudinary',
     "corsheaders",
     'rest_framework',
@@ -160,7 +161,8 @@ REST_FRAMEWORK = {
     ),
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
+    ],
+    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend']
 }
 
 # Static files (CSS, JavaScript, Images)

@@ -5,6 +5,7 @@ from .serializers import TableSerializer,CategorySerializer,ItemSerializer,Order
 from .models import Table,Category,Item,Order
 import utils_files.response_handler as rh
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
 
 # Create your views here.
 
@@ -45,7 +46,7 @@ class OrderView(ViewSet):
     def create(self,request):
         serializers=OrderSerializer(data=request.data)
         if serializers.is_valid():
-            serializers.save(Item_id=request.data["Item_id"])
+            serializers.save(Item_id=request.data["Item_id"],table_id=request.data["table"])
             r=rh.ResponseMsg(data=serializers.data,error=False,msg="create Successfully!!!")
             return Response(r.response)
         r=rh.ResponseMsg(data={},error=True,msg=serializers.errors)
