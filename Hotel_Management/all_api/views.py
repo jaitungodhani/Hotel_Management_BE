@@ -1,11 +1,12 @@
 from functools import partial
 from django.shortcuts import render
 from rest_framework.viewsets import ViewSet
-from .serializers import TableSerializer,CategorySerializer,ItemSerializer,OrderSerializer
+from .serializers import TableSerializer,CategorySerializer,ItemSerializer,OrderSerializer,AllBillSerializer
 from .models import Table,Category,Item,Order
 import utils_files.response_handler as rh
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
+from itertools import chain
 
 # Create your views here.
 
@@ -66,5 +67,26 @@ class OrderView(ViewSet):
         obj=Order.objects.get(pk=pk)
         obj.delete()
         r=rh.ResponseMsg(data={},error=False,msg="Delete Order Succssfully!!!")
+        return Response(r.response)
+
+class OrderFilterView(ViewSet):
+    def create(self,request):
+        tables=request.data.get("tables")
+        items=request.data.get("items")
+        status=request.data.get("status")
+        print(tables,items,status)
+        all_order_obj=Order.objects.order_by("-status","create_at").all()
+        all_order_obj=Order.objects.filter(table__name__in=tables,id__in=all_order_obj).all() if tables else all_order_obj
+        all_order_obj=Order.objects.filter(Item__name__in=items,id__in=all_order_obj).all() if items else all_order_obj
+        all_order_obj=Order.objects.filter(status__in=status,id__in=all_order_obj).all() if status else all_order_obj
+        serilaize_data=OrderSerializer(all_order_obj,many=True)
+        r=rh.ResponseMsg(data=serilaize_data.data,error=False,msg="Get Successfully!!!")
+        return Response(r.response)
+
+class AllBillView(ViewSet):
+    def list(self,request):
+        all_bill_obj=Table.objects.all()
+        serialize_data=AllBillSerializer(all_bill_obj,many=True)
+        r=rh.ResponseMsg(data=serialize_data.data,error=False,msg="Get Successfully!!!")
         return Response(r.response)
         

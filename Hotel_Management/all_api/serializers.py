@@ -1,8 +1,11 @@
+from asyncore import read
 from dataclasses import fields
 from pyexpat import model
 from .models import *
 from rest_framework import serializers
-from django.db.models import Count
+from django.db.models import Count,Sum,F
+#  from django.db.models import F
+# from django.db.models import Avg, Count, Min, Sum
 
 
 class TableSerializer(serializers.ModelSerializer):
@@ -39,3 +42,16 @@ class BillSerializer(serializers.ModelSerializer):
     class Meta:
         model=Bill
         fields="__all__"
+
+class AllBillSerializer(serializers.ModelSerializer):
+    order=OrderSerializer(many=True,read_only=True)
+    total_amount=serializers.SerializerMethodField()
+
+    class Meta:
+        model=Table
+        fields="__all__"
+        extra_fields=["total_amount"]
+    
+    def get_total_amount(self,table):
+        total_amount=Table.objects.filter(pk=table.id).aggregate(amount=Sum(F("order__Item__price")*F("order__quantity")))
+        return total_amount["amount"]

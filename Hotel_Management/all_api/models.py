@@ -51,7 +51,7 @@ class Order(models.Model):
     id=models.UUIDField(primary_key=True,default = uuid.uuid4,editable=False)
     Item=models.ForeignKey(Item,on_delete=models.CASCADE)
     quantity=models.IntegerField()
-    table=models.ForeignKey(Table,on_delete=models.CASCADE)
+    table=models.ForeignKey(Table,related_name="order",on_delete=models.CASCADE)
     status=models.CharField(choices=STATUS_CHOICES,max_length=255,default="Waiting")
     create_at=models.DateTimeField(auto_now=True)
     pay=models.BooleanField(default=False)
