@@ -41,6 +41,19 @@ class Item(models.Model):
         verbose_name_plural="Items"
         unique_together = ('category_id', 'name',)
 
+class Bill(models.Model):
+    id=models.UUIDField(primary_key=True,default = uuid.uuid4,editable=False)
+    table=models.ForeignKey(Table,on_delete=models.CASCADE)
+    total_amount=models.IntegerField()
+    pay=models.BooleanField(default=False)
+
+    def __str__(self):
+        return str(self.id)
+
+    class Meta:
+        verbose_name="bill"
+        verbose_name_plural="bills"
+
 class Order(models.Model):
     STATUS_CHOICES = (
         ('Waiting', 'Waiting'),
@@ -54,6 +67,7 @@ class Order(models.Model):
     table=models.ForeignKey(Table,related_name="order",on_delete=models.CASCADE)
     status=models.CharField(choices=STATUS_CHOICES,max_length=255,default="Waiting")
     create_at=models.DateTimeField(auto_now=True)
+    bill=models.ForeignKey(Bill,related_name="bill",on_delete=models.CASCADE,null=True,blank=True)
     pay=models.BooleanField(default=False)
 
     def __str__(self):
@@ -63,15 +77,9 @@ class Order(models.Model):
         verbose_name="Order"
         verbose_name_plural="Orders"
 
-class Bill(models.Model):
-    id=models.UUIDField(primary_key=True,default = uuid.uuid4,editable=False)
-    table=models.ForeignKey(Table,on_delete=models.CASCADE)
-    total_amount=models.IntegerField()
-    pay=models.BooleanField(default=False)
 
-    def __str__(self):
-        return str(self.id)
 
-    class Meta:
-        verbose_name="bill"
-        verbose_name_plural="bills"
+
+
+
+
