@@ -44,7 +44,7 @@ class BillSerializer(serializers.ModelSerializer):
         fields="__all__"
 
 class AllBillSerializer(serializers.ModelSerializer):
-    order=OrderSerializer(many=True,read_only=True)
+    order=OrderSerializer(source="not_pay_orders",many=True,read_only=True)
     total_amount=serializers.SerializerMethodField()
 
     class Meta:
@@ -53,5 +53,14 @@ class AllBillSerializer(serializers.ModelSerializer):
         extra_fields=["total_amount"]
     
     def get_total_amount(self,table):
-        total_amount=Table.objects.filter(pk=table.id).aggregate(amount=Sum(F("order__Item__price")*F("order__quantity")))
+        total_amount=Table.objects.filter(pk=table.id,order__pay=False).aggregate(amount=Sum(F("order__Item__price")*F("order__quantity")))
         return total_amount["amount"]
+
+class BillSerializer(serializers.ModelSerializer):
+    order=OrderSerializer(many=True,read_only=True)
+
+    class Meta:
+        model=Bill
+        fields="__all__"
+    
+    

@@ -1,8 +1,9 @@
 from functools import partial
 from django.shortcuts import render
 from rest_framework.viewsets import ViewSet
-from .serializers import TableSerializer,CategorySerializer,ItemSerializer,OrderSerializer,AllBillSerializer
-from .models import Table,Category,Item,Order
+from .serializers import TableSerializer,CategorySerializer,ItemSerializer, \
+    OrderSerializer,AllBillSerializer,BillSerializer
+from .models import Table,Category,Item,Order,Bill
 import utils_files.response_handler as rh
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
@@ -89,10 +90,21 @@ class AllBillView(ViewSet):
         serialize_data=AllBillSerializer(all_bill_obj,many=True)
         r=rh.ResponseMsg(data=serialize_data.data,error=False,msg="Get Successfully!!!")
         return Response(r.response)
+    
+    def create(self,request):
+        serialize=BillSerializer(data=request.data)
+        if serialize.is_valid():
+            serialize.save()
+            id=serialize.data["id"]
+            Order.objects.filter(table__id=request.data["table"],pay=False).update(pay=True,bill=id)
+            r=rh.ResponseMsg(data={},error=False,msg="create Successfully!!!")
+            return Response(r.response)
+        r=rh.ResponseMsg(data={},error=True,msg=serialize.errors)
+        return Response(r.response)
 
 class CompletedBillView(ViewSet):
     def list(self,request):
-        all_bill_obj=Table.objects.all()
-        serialize_data=AllBillSerializer(all_bill_obj,many=True)
+        all_bill_obj=Bill.objects.filter(pay=True).all()
+        serialize_data=BillSerializer(all_bill_obj,many=True)
         r=rh.ResponseMsg(data=serialize_data.data,error=False,msg="Get Successfully!!!")
         return Response(r.response)        

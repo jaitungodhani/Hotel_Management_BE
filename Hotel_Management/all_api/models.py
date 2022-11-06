@@ -14,6 +14,9 @@ class Table(models.Model):
     def __str__(self):
         return self.name
     
+    def not_pay_orders(self):
+        return self.order.filter(pay=False).all()
+
     class Meta:
         verbose_name="table"
         verbose_name_plural="tables"
@@ -67,7 +70,7 @@ class Order(models.Model):
     table=models.ForeignKey(Table,related_name="order",on_delete=models.CASCADE)
     status=models.CharField(choices=STATUS_CHOICES,max_length=255,default="Waiting")
     create_at=models.DateTimeField(auto_now=True)
-    bill=models.ForeignKey(Bill,related_name="bill",on_delete=models.CASCADE,null=True,blank=True)
+    bill=models.ForeignKey(Bill,related_name="order",on_delete=models.CASCADE,null=True,blank=True)
     pay=models.BooleanField(default=False)
 
     def __str__(self):
