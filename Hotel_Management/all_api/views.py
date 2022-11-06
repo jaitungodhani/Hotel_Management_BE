@@ -89,4 +89,10 @@ class AllBillView(ViewSet):
         serialize_data=AllBillSerializer(all_bill_obj,many=True)
         r=rh.ResponseMsg(data=serialize_data.data,error=False,msg="Get Successfully!!!")
         return Response(r.response)
-        
+
+class CompletedBillView(ViewSet):
+    def list(self,request):
+        all_bill_obj=Table.objects.all()
+        serialize_data=AllBillSerializer(all_bill_obj,many=True)
+        r=rh.ResponseMsg(data=serialize_data.data,error=False,msg="Get Successfully!!!")
+        return Response(r.response)        
