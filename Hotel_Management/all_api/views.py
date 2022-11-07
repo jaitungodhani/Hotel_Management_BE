@@ -8,7 +8,7 @@ import utils_files.response_handler as rh
 from rest_framework.response import Response
 from django_filters.rest_framework import DjangoFilterBackend
 from itertools import chain
-
+from rest_framework import status
 # Create your views here.
 
 class TableView(ViewSet):
@@ -34,13 +34,13 @@ class ItemView(ViewSet):
 
 class OrderView(ViewSet):
     def list(self,request,format=None):
-        all_order_obj=Order.objects.order_by("-status","create_at").all()
+        all_order_obj=Order.objects.filter(pay=False).order_by("-status","create_at").all()
         serilaize_data=OrderSerializer(all_order_obj,many=True)
         r=rh.ResponseMsg(data=serilaize_data.data,error=False,msg="Get Successfully!!!")
         return Response(r.response)
 
     def retrieve(self,request,pk=None):
-        all_order_obj=Order.objects.filter(table_id=pk).all()
+        all_order_obj=Order.objects.filter(table_id=pk,pay=False).all()
         serialize_data=OrderSerializer(all_order_obj,many=True)
         r=rh.ResponseMsg(data=serialize_data.data,error=False,msg="Get Successfully!!!")
         return Response(r.response)
@@ -76,10 +76,10 @@ class OrderFilterView(ViewSet):
         items=request.data.get("items")
         status=request.data.get("status")
         print(tables,items,status)
-        all_order_obj=Order.objects.order_by("-status","create_at").all()
-        all_order_obj=Order.objects.filter(table__name__in=tables,id__in=all_order_obj).all() if tables else all_order_obj
-        all_order_obj=Order.objects.filter(Item__name__in=items,id__in=all_order_obj).all() if items else all_order_obj
-        all_order_obj=Order.objects.filter(status__in=status,id__in=all_order_obj).all() if status else all_order_obj
+        all_order_obj=Order.objects.filter(pay=False).order_by("-status","create_at").all()
+        all_order_obj=Order.objects.filter(table__name__in=tables,id__in=all_order_obj,pay=False).all() if tables else all_order_obj
+        all_order_obj=Order.objects.filter(Item__name__in=items,id__in=all_order_obj,pay=False).all() if items else all_order_obj
+        all_order_obj=Order.objects.filter(status__in=status,id__in=all_order_obj,pay=False).all() if status else all_order_obj
         serilaize_data=OrderSerializer(all_order_obj,many=True)
         r=rh.ResponseMsg(data=serilaize_data.data,error=False,msg="Get Successfully!!!")
         return Response(r.response)
@@ -93,6 +93,10 @@ class AllBillView(ViewSet):
     
     def create(self,request):
         serialize=BillSerializer(data=request.data)
+        orders=Order.objects.filter(table__id=request.data["table"],pay=False).exclude(status="Completed")
+        if orders:
+            r=rh.ResponseMsg(data={},error=True,msg="Plz complete all the orders for table")
+            return Response(r.response, status=status.HTTP_400_BAD_REQUEST)
         if serialize.is_valid():
             serialize.save()
             id=serialize.data["id"]

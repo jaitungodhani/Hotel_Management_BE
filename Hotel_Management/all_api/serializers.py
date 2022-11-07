@@ -16,7 +16,7 @@ class TableSerializer(serializers.ModelSerializer):
         extra_fields=["order_status"]
     
     def get_order_status(self,table):
-        order_status=Order.objects.filter(table__id=table.id).values("status").annotate(value=Count('status'))
+        order_status=Order.objects.filter(table__id=table.id, pay=False).values("status").annotate(value=Count('status'))
         return order_status
 
 class CategorySerializer(serializers.ModelSerializer):
