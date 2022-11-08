@@ -11,8 +11,12 @@ def custom_exception_handler(exc, context):
             'data':{},
             'message': exc.detail,
         }
+
+        if response.status_code == 200:
+            Response(custom_response_data,status=status.HTTP_400_BAD_REQUEST)
+
+        return Response(custom_response_data,status=response.status_code)
         
-        return Response(custom_response_data,status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({
             'error': True,
