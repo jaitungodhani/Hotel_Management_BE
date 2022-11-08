@@ -49,6 +49,7 @@ class Bill(models.Model):
     table=models.ForeignKey(Table,on_delete=models.CASCADE)
     total_amount=models.IntegerField()
     pay=models.BooleanField(default=False)
+    create_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return str(self.id)

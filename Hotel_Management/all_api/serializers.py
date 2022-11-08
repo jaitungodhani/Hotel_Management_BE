@@ -58,6 +58,7 @@ class AllBillSerializer(serializers.ModelSerializer):
 
 class BillSerializer(serializers.ModelSerializer):
     order=OrderSerializer(many=True,read_only=True)
+    table=TableSerializer(read_only = True)
 
     class Meta:
         model=Bill

@@ -98,7 +98,7 @@ class AllBillView(ViewSet):
             r=rh.ResponseMsg(data={},error=True,msg="Plz complete all the orders for table")
             return Response(r.response, status=status.HTTP_400_BAD_REQUEST)
         if serialize.is_valid():
-            serialize.save()
+            serialize.save(table_id=request.data["table"])
             id=serialize.data["id"]
             Order.objects.filter(table__id=request.data["table"],pay=False).update(pay=True,bill=id)
             r=rh.ResponseMsg(data={},error=False,msg="create Successfully!!!")

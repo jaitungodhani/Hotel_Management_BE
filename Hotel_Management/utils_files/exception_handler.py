@@ -12,7 +12,7 @@ def custom_exception_handler(exc, context):
             'message': exc.detail,
         }
         
-        return Response(custom_response_data,status=response.status_code)
+        return Response(custom_response_data,status=status.HTTP_400_BAD_REQUEST)
     else:
         return Response({
             'error': True,
