@@ -36,7 +36,12 @@ class LoginView(APIView):
 class Is_Login(APIView):
     def get(self, request, *args, **kwargs):
         data=request.user
-        serializer=UserSerializer(data)
-        r=rh.ResponseMsg(data=serializer.data,error=False,msg="Login User data get successfully!!!")
-        return Response(r.response)
-        
+        if data:
+            serializer=UserSerializer(data)
+            r=rh.ResponseMsg(data=serializer.data,error=False,msg="Login User data get successfully!!!")
+            return Response(r.response)
+        else:
+            r=rh.ResponseMsg(data={},error=True,msg="Not login")
+            return Response(r.response,status=status.HTTP_401_UNAUTHORIZED)
+    
+
