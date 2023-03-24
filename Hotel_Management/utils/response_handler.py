@@ -9,3 +9,4 @@ class ResponseMsg:
             'data':self.data,
             'message':self.message
         }
+
