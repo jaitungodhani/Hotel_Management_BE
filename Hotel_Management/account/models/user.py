@@ -39,3 +39,9 @@ class User(AbstractBaseUser, DateMixin, PermissionsMixin):
 
     def __str__(self) -> str:
         return self.email + " ---- " + str(self.pk)
+    
+
+    @property
+    def role(self):
+        group = self.groups.first()
+        return group.name if group else None
