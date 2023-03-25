@@ -40,3 +40,9 @@ class IsAdmin(permissions.BasePermission):
     def has_permission(self, request, view):
         has_group_permission = _has_group_permission(request.user, self.required_groups)
         return request.user and has_group_permission
+    
+
+class IsUserItSelf(permissions.BasePermission):
+    def has_object_permission(self, request, view, obj):
+        # Instance must have an attribute named `owner`.
+        return obj.id == request.user.id

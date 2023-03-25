@@ -10,7 +10,8 @@ router = DefaultRouter()
 router.register("usermanage", ManageUserView)
 
 urlpatterns = [
-    path('', include(router.urls)),
-    path("login/", LoginView.as_view()),
-    path("refresh/", RefreshView.as_view()),
+    path('account/', include(router.urls)),
+    path("account/login/", LoginView.as_view()),
+    path("account/refresh/", RefreshView.as_view()),
 ]
+
