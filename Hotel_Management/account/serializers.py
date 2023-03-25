@@ -4,6 +4,12 @@ from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
 from django.utils.translation import gettext_lazy as _
 from django.shortcuts import get_object_or_404
 from django.contrib.auth.models import Group
+from .models import (
+    ForgotpasswordToken
+)
+import uuid
+from django.core.mail import EmailMessage
+from django.conf import settings
 
 User = get_user_model()
 
@@ -113,3 +119,79 @@ class ResetPasswordSerializer(serializers.Serializer):
            self.new_password
         )
         self.request.user.save()
+
+
+class ForgotPassEmailSendSerializer(serializers.Serializer):
+    email = serializers.EmailField(required = True)
+
+    def validate(self, attrs):
+        self.email = attrs["email"]
+
+        try:
+            self.user = User.objects.get(email = self.email)
+        except User.DoesNotExist:
+            raise serializers.ValidationError("Email is Wrong, Please check !!!!")
+        
+        return super(ForgotPassEmailSendSerializer, self).validate(attrs)
+    
+    def send_mail(self):
+        user_obj_token = ForgotpasswordToken.objects.filter(user__email=self.user.email).first()
+        token=str(uuid.uuid4())
+
+        if user_obj_token:
+            user_obj_token.token = token
+            user_obj_token.save()
+        else:
+            ForgotpasswordToken.objects.create(user = self.user, token = token)
+
+        domain="127.0.0.1:3000"
+        subject = "Reset your Hotel Management password"
+        message = (
+            f"Hello\n\n"
+            f"We've received a request to reset the password for the"
+            f" Hotel Management account associated with {self.email}.\n\n"
+            f"Please use this link to reset your password\n"
+            f"{domain}/api/change_password/{token}"
+            f"\n"
+            f"If you did not make this request, please contact us at"
+            f" hotelmanagement@gmail.com\n\n"
+            f"-- Hotel Managent Service"
+        )
+
+        mail = EmailMessage(
+            subject=subject,
+            body=message,
+            from_email=settings.DEFAULT_ACCOUNT_EMAIL,
+            to=[self.email]
+        )
+        mail.send(fail_silently=False)
+
+class ForgotpasswordSerializer(serializers.Serializer):
+    token = serializers.CharField(max_length=100, required=True)
+    new_password = serializers.CharField(max_length=100, required = True)
+    confirm_password = serializers.CharField(max_length=100, required = True)
+
+    def validate(self, attrs):
+        self.token = attrs["token"]
+
+        try:
+            self.forgot_password_token_obj = ForgotpasswordToken.objects.get(token = self.token)
+        except ForgotpasswordToken.DoesNotExist:
+            raise serializers.ValidationError("Token Not Valid!!!")
+        
+        
+        self.new_password = attrs["new_password"]
+        self.confirm_new_password = attrs["confirm_password"]
+
+        if self.new_password != self.confirm_new_password:
+            raise serializers.ValidationError("Please, Add both password same")
+        
+        return super(ForgotpasswordSerializer,self).validate(attrs)
+    
+    def set_password(self):
+    
+        self.forgot_password_token_obj.user.set_password(
+           self.new_password
+        )
+        self.forgot_password_token_obj.user.save()
+        self.forgot_password_token_obj.delete()

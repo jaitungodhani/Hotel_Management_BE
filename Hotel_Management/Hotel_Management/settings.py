@@ -171,3 +171,13 @@ SWAGGER_SETTINGS = {
         }
     }
 }
+
+# Email
+EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 465
+EMAIL_HOST_USER =  "jaitun.flyontechsolution@gmail.com"
+EMAIL_HOST_PASSWORD = "rbezxxfeicxtkjvn"
+EMAIL_USE_TLS = True
+DEFAULT_SERVER_EMAIL = "jaitun.flyontechsolution@gmail.com"
+DEFAULT_ACCOUNT_EMAIL = "jaitun.flyontechsolution@gmail.com"

@@ -8,7 +8,9 @@ from .serializers import (
     UserSerializer,
     UserCreateSerializer,
     UserUpdateSerializer,
-    ResetPasswordSerializer
+    ResetPasswordSerializer,
+    ForgotPassEmailSendSerializer,
+    ForgotpasswordSerializer
     )
 from rest_framework_simplejwt.serializers import (
     TokenRefreshSerializer
@@ -20,6 +22,7 @@ from core.permissions import (
     IsAdmin,
     IsUserItSelf
 )
+from rest_framework import permissions
 from rest_framework.decorators import action
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
@@ -104,6 +107,43 @@ class ManageUserView(viewsets.ModelViewSet):
         serializer.set_password()
         response = ResponseMsg(error=False, data={}, message="Password Reset Successfully!!!!")
         return Response(response.response)
+    
+
+    @swagger_auto_schema(
+        method="post",
+        request_body=ForgotPassEmailSendSerializer
+    )
+    @action(
+        methods=["POST"],
+        detail=False,
+        serializer_class = ForgotPassEmailSendSerializer,
+        permission_classes = [permissions.AllowAny]
+    )
+    def forgot_password_send_mail(self, request):
+        serializer = ForgotPassEmailSendSerializer(data = request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.send_mail()
+        response = ResponseMsg(error=False, data={}, message="Email Sent Successfully!!!!")
+        return Response(response.response)
+    
+
+    @swagger_auto_schema(
+        method="post",
+        request_body=ForgotpasswordSerializer
+    )
+    @action(
+        methods=["POST"],
+        detail=False,
+        serializer_class = ForgotpasswordSerializer,
+        permission_classes = [permissions.AllowAny]
+    )
+    def forgot_password(self, request):
+        serializer = ForgotpasswordSerializer(data = request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.set_password()
+        response = ResponseMsg(error=False, data={}, message="Password set Successfully!!!!")
+        return Response(response.response)
+
 
 
     
