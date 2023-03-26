@@ -8,8 +8,7 @@ from .models import (
     ForgotpasswordToken
 )
 import uuid
-from django.core.mail import EmailMessage
-from django.conf import settings
+from Hotel_Management.celery import send_mail
 
 User = get_user_model()
 
@@ -64,14 +63,35 @@ class UserCreateSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         role = validated_data.pop("role")
-        password = validated_data.pop("password")
+        self.password = validated_data.pop("password")
+        self.email = validated_data.pop("email")
         user = super(UserCreateSerializer, self).create(validated_data)
         group = get_object_or_404(Group, name__iexact=role)
         user.groups.add(group)
-        user.set_password(password)
+        user.set_password(self.password)
         user.save()
+        self.send_mail()
         return user
     
+    def send_mail(self):
+        subject = "Welcome to Hotel Management Service !!!!"
+        message = (
+            f"Hello\n\n"
+            f"Hotel Management Service Created account for"
+            f" this email {self.email}.\n\n"
+            f"Below we have mention your password\n"
+            f"{self.password} \n\n\n\n"
+            f" And we have request you to please reset your new password by using this password for further use"
+            f"\n"
+            f"If you did not make this request, please contact us at"
+            f" hotelmanagement@gmail.com\n\n"
+            f"-- Hotel Managent Service"
+        )
+
+        send_mail.apply_async(
+            args=[subject, message, self.email],
+        )
+
     def to_representation(self, instance):
         return UserSerializer(instance).data
 
@@ -158,13 +178,9 @@ class ForgotPassEmailSendSerializer(serializers.Serializer):
             f"-- Hotel Managent Service"
         )
 
-        mail = EmailMessage(
-            subject=subject,
-            body=message,
-            from_email=settings.DEFAULT_ACCOUNT_EMAIL,
-            to=[self.email]
+        send_mail.apply_async(
+            args=[subject, message, self.email],
         )
-        mail.send(fail_silently=False)
 
 class ForgotpasswordSerializer(serializers.Serializer):
     token = serializers.CharField(max_length=100, required=True)

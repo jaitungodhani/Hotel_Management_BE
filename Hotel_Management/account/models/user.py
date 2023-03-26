@@ -25,6 +25,11 @@ class User(AbstractBaseUser, DateMixin, PermissionsMixin):
         verbose_name=_("Username"),
         max_length=100
     )
+    profile_photo = models.ImageField(
+        upload_to="profile_photos",
+        null=True,
+        blank=True
+    )
 
 
     USERNAME_FIELD = 'email'

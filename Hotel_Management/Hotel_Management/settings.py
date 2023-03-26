@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 from pathlib import Path
 from datetime import timedelta
 from django.conf import settings
+import os
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -42,6 +43,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'drf_yasg',
     'rest_framework_simplejwt',
+    'cloudinary_storage',
+    'cloudinary',
+
     'core',
     'account'
 ]
@@ -125,6 +129,7 @@ AUTH_USER_MODEL = 'account.user'
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, "hotel_management/static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
@@ -181,3 +186,19 @@ EMAIL_HOST_PASSWORD = "rbezxxfeicxtkjvn"
 EMAIL_USE_TLS = True
 DEFAULT_SERVER_EMAIL = "jaitun.flyontechsolution@gmail.com"
 DEFAULT_ACCOUNT_EMAIL = "jaitun.flyontechsolution@gmail.com"
+
+
+#celery
+CELERY_BROKER_URL = f"redis://127.0.0.1:6379"
+CELERY_RESULT_BACKEND = 'db+sqlite:///db.sqlite3'
+
+
+#cloudinary image storage
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'drfdjango',
+    'API_KEY': '625865289567944',
+    'API_SECRET': 'FXHzvgBmnFpQ4ZFLXgLZYIEqv8s',
+}
+
+MEDIA_URL = 'hotel_management/media/'
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
