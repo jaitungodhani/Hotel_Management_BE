@@ -85,9 +85,8 @@ class UserCreateSerializer(serializers.ModelSerializer):
             f"\n"
             f"If you did not make this request, please contact us at"
             f" hotelmanagement@gmail.com\n\n"
-            f"-- Hotel Managent Service"
+            f"-- Hotel Managent Service 😊😊"
         )
-
         send_mail.apply_async(
             args=[subject, message, self.email],
         )
@@ -175,7 +174,7 @@ class ForgotPassEmailSendSerializer(serializers.Serializer):
             f"\n"
             f"If you did not make this request, please contact us at"
             f" hotelmanagement@gmail.com\n\n"
-            f"-- Hotel Managent Service"
+            f"-- Hotel Managent Service 😊😊"
         )
 
         send_mail.apply_async(
