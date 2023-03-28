@@ -52,7 +52,8 @@ INSTALLED_APPS = [
     'account',
     'table',
     'category',
-    'item'
+    'item',
+    'order'
 ]
 
 MIDDLEWARE = [
