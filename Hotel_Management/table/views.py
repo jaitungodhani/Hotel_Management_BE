@@ -61,8 +61,7 @@ class TableManageView(viewsets.ModelViewSet):
         permission_classes = [IsWaiter | IsAdmin]
     )
     def tabledata_with_orderstatuscountdata(self, request):
-        obj = Table.objects.all()
-        serializer = TablewithorderstatusSerializer(obj, many=True)
+        serializer = TablewithorderstatusSerializer(self.get_queryset(), many=True)
         response = ResponseMsg(error=False, data=serializer.data, message="Get Table data Successfully!!!!")
         return Response(response.response)
 
