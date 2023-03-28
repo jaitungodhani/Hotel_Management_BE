@@ -1,6 +1,9 @@
 from django.shortcuts import render
 from .models import Table
-from .serializers import TableSerializer
+from .serializers import (
+    TableSerializer,
+    TablewithorderstatusSerializer
+)
 from rest_framework import viewsets
 from core.permissions import (
     IsAdmin,
@@ -11,6 +14,8 @@ from utils.response_handler import ResponseMsg
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from rest_framework import permissions
+
+
 # Create your views here.
 
 class TableManageView(viewsets.ModelViewSet):
@@ -49,6 +54,17 @@ class TableManageView(viewsets.ModelViewSet):
         response = ResponseMsg(error=False, data=response_data.data, message="Table update Successfully!!!!")
         return Response(response.response)
     
+
+    @action(
+        methods=["get"],
+        detail=False,
+        permission_classes = [IsWaiter | IsAdmin]
+    )
+    def tabledata_with_orderstatuscountdata(self, request):
+        obj = Table.objects.all()
+        serializer = TablewithorderstatusSerializer(obj, many=True)
+        response = ResponseMsg(error=False, data=serializer.data, message="Get Table data Successfully!!!!")
+        return Response(response.response)
 
 
     
