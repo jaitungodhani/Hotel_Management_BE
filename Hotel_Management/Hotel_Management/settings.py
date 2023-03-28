@@ -50,7 +50,8 @@ INSTALLED_APPS = [
 
     'core',
     'account',
-    'table'
+    'table',
+    'category'
 ]
 
 MIDDLEWARE = [
