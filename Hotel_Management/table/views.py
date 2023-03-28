@@ -21,11 +21,12 @@ class TableManageView(viewsets.ModelViewSet):
     ]
     ordering_fields = ["id","name"]
     ordering = ["name"]
+    permission_classes = [IsAdmin]
 
 
     def list(self, request, *args, **kwargs):
         response_data = super(TableManageView, self).list(request, *args, **kwargs)
-        response = ResponseMsg(error=False, data=response_data.data, message="All User get Successfully!!!!")
+        response = ResponseMsg(error=False, data=response_data.data, message="All Table get Successfully!!!!")
         return Response(response.response)
     
     def retrieve(self, request, *args, **kwargs):
@@ -35,17 +36,17 @@ class TableManageView(viewsets.ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         response_data = super(TableManageView, self).create(request, *args, **kwargs)
-        response = ResponseMsg(error=False, data=response_data.data, message="User Create Successfully!!!!")
+        response = ResponseMsg(error=False, data=response_data.data, message="Table Create Successfully!!!!")
         return Response(response.response)
     
     def update(self, request, *args, **kwargs):
         response_data = super(TableManageView, self).update(request, *args, **kwargs)
-        response = ResponseMsg(error=False, data=response_data.data, message="User update Successfully!!!!")
+        response = ResponseMsg(error=False, data=response_data.data, message="Table update Successfully!!!!")
         return Response(response.response)
     
     def partial_update(self, request, *args, **kwargs):
         response_data = super(TableManageView, self).partial_update(request, *args, **kwargs)
-        response = ResponseMsg(error=False, data=response_data.data, message="User update Successfully!!!!")
+        response = ResponseMsg(error=False, data=response_data.data, message="Table update Successfully!!!!")
         return Response(response.response)
     
 

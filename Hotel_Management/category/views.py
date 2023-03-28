@@ -19,13 +19,14 @@ class CategoryManageView(viewsets.ModelViewSet):
     filter_backends = [
         filters.OrderingFilter
     ]
+    permission_classes = [IsAdmin]
     ordering_fields = ["id","name"]
     ordering = ["created_at"]
 
 
     def list(self, request, *args, **kwargs):
         response_data = super(CategoryManageView, self).list(request, *args, **kwargs)
-        response = ResponseMsg(error=False, data=response_data.data, message="All User get Successfully!!!!")
+        response = ResponseMsg(error=False, data=response_data.data, message="All Category get Successfully!!!!")
         return Response(response.response)
     
     def retrieve(self, request, *args, **kwargs):
@@ -35,17 +36,17 @@ class CategoryManageView(viewsets.ModelViewSet):
     
     def create(self, request, *args, **kwargs):
         response_data = super(CategoryManageView, self).create(request, *args, **kwargs)
-        response = ResponseMsg(error=False, data=response_data.data, message="User Create Successfully!!!!")
+        response = ResponseMsg(error=False, data=response_data.data, message="Category Create Successfully!!!!")
         return Response(response.response)
     
     def update(self, request, *args, **kwargs):
         response_data = super(CategoryManageView, self).update(request, *args, **kwargs)
-        response = ResponseMsg(error=False, data=response_data.data, message="User update Successfully!!!!")
+        response = ResponseMsg(error=False, data=response_data.data, message="Category update Successfully!!!!")
         return Response(response.response)
     
     def partial_update(self, request, *args, **kwargs):
         response_data = super(CategoryManageView, self).partial_update(request, *args, **kwargs)
-        response = ResponseMsg(error=False, data=response_data.data, message="User update Successfully!!!!")
+        response = ResponseMsg(error=False, data=response_data.data, message="Category update Successfully!!!!")
         return Response(response.response)
     
 
