@@ -32,10 +32,11 @@ class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
         fields = "__all__"
-        
+    
+    
 
 class TablewithoBilldataSerializer(serializers.ModelSerializer):
-    orders = OrderSerializer(source="table_for_order", read_only=True, many=True)
+    orders = serializers.SerializerMethodField()
     total_amount = serializers.SerializerMethodField()
 
     class Meta:
@@ -45,4 +46,7 @@ class TablewithoBilldataSerializer(serializers.ModelSerializer):
     def get_total_amount(self, obj):
         total_amount = Order.objects.filter(table__id = obj.id).aggregate(amount = Sum(F("item__price")*F("quantity")))
         return total_amount["amount"]
+    
+    def get_orders(self, obj):
+        pass
     

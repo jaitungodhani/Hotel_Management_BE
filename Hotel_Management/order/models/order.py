@@ -11,7 +11,8 @@ class Order(DateMixin, models.Model):
     STATUS_CHOICES = (
         ("Waiting", _("Waiting")),
         ("Prepairing", _("Prepairing")),
-        ("Cooked", _("Cooked"))
+        ("Cooked", _("Cooked")),
+        ("Delivered", _("Delivered"))
     )
 
     id = models.UUIDField(
@@ -42,10 +43,7 @@ class Order(DateMixin, models.Model):
         default="Waiting",
         max_length=10
     )
-    is_completed = models.BooleanField(
-        verbose_name=_("is completed"),
-        default=False
-    )
+    
 
     
     def __str__(self) -> str:
