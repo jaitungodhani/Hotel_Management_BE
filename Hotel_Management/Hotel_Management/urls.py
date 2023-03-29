@@ -40,6 +40,7 @@ urlpatterns = [
     path('api/', include("category.urls")),
     path('api/', include("item.urls")),
     path('api/', include("order.urls")),
+    path('api/', include("bill.urls")),
     # swagger
     re_path(r'^docs/$', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]

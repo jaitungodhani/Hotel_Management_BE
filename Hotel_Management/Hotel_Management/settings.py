@@ -41,19 +41,20 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django_filters',
+    'rest_framework',
     'drf_yasg',
     'rest_framework_simplejwt',
     'cloudinary_storage',
     'cloudinary',
-    'django_filters',
-    'rest_framework',
-
+  
     'core',
     'account',
     'table',
     'category',
     'item',
-    'order'
+    'order',
+    'bill'
 ]
 
 MIDDLEWARE = [
@@ -135,7 +136,7 @@ AUTH_USER_MODEL = 'account.user'
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, "hotel_management/static")
+STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field

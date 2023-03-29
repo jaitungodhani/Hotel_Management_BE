@@ -2,12 +2,14 @@ from django.shortcuts import render
 from .models import Table
 from .serializers import (
     TableSerializer,
-    TablewithorderstatusSerializer
+    TablewithorderstatusSerializer,
+    TablewithoBilldataSerializer
 )
 from rest_framework import viewsets
 from core.permissions import (
     IsAdmin,
-    IsWaiter
+    IsWaiter,
+    IsBillDesk
 )
 from rest_framework import filters
 from utils.response_handler import ResponseMsg
@@ -64,6 +66,20 @@ class TableManageView(viewsets.ModelViewSet):
         serializer = TablewithorderstatusSerializer(self.get_queryset(), many=True)
         response = ResponseMsg(error=False, data=serializer.data, message="Get Table data Successfully!!!!")
         return Response(response.response)
+    
+
+    @action(
+        methods=["get"],
+        detail=False,
+        permission_classes = [IsBillDesk]
+    )
+    def tableBillData(self, request):
+        serializer = TablewithoBilldataSerializer(self.get_queryset(), many=True)
+        response = ResponseMsg(error=False, data=serializer.data, message="Get Table data Successfully!!!!")
+        return Response(response.response)
+    
+
+
 
 
     

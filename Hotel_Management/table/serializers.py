@@ -3,8 +3,10 @@ from .models import (
     Table
 )
 from order.models import Order
-from django.db.models import Count
-
+from django.db.models import Count, Sum, F
+from item.serializers import (
+    ItemSerializer
+)
 
 class TableSerializer(serializers.ModelSerializer):
     class Meta:
@@ -22,3 +24,25 @@ class TablewithorderstatusSerializer(serializers.ModelSerializer):
     def get_orders(slef, obj):
         orders = Order.objects.filter(table__id = obj.id).values("status").annotate(count = Count("status"))
         return orders
+
+
+class OrderSerializer(serializers.ModelSerializer):
+    item = ItemSerializer(read_only=True)
+
+    class Meta:
+        model = Order
+        fields = "__all__"
+        
+
+class TablewithoBilldataSerializer(serializers.ModelSerializer):
+    orders = OrderSerializer(source="table_for_order", read_only=True, many=True)
+    total_amount = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Table
+        fields = "__all__"
+
+    def get_total_amount(self, obj):
+        total_amount = Order.objects.filter(table__id = obj.id).aggregate(amount = Sum(F("item__price")*F("quantity")))
+        return total_amount["amount"]
+    

@@ -1,7 +1,3 @@
-from django.shortcuts import render
-
-# Create your views here.
-from django.shortcuts import render
 from .models import Order
 from .serializers import (
     OrderSerializer,
@@ -14,9 +10,10 @@ from core.permissions import (
     IsManager
 )
 from rest_framework import filters
+from django_filters.rest_framework import DjangoFilterBackend
 from utils.response_handler import ResponseMsg
 from rest_framework.response import Response
-from rest_framework.decorators import action
+from rest_framework import permissions
 
 
 # Create your views here.
@@ -24,12 +21,19 @@ from rest_framework.decorators import action
 class OrderManageView(viewsets.ModelViewSet):
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
+    permission_classes = [IsAdmin | IsWaiter | IsManager]
     filter_backends = [
+        DjangoFilterBackend,
         filters.OrderingFilter
     ]
-    permission_classes = [IsAdmin | IsWaiter | IsManager]
+    filterset_fields  = {
+        'status': ["exact"],
+        'table__id': ["in"], 
+        'item__id' : ["in"]
+    }
     ordering_fields = ["id","category"]
-    ordering = ["created_at"]
+    ordering = ["-created_at"]
+    
 
     def get_permissions(self):
         if self.action in ["create","destroy"]:
