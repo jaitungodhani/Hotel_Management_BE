@@ -2,6 +2,7 @@ from rest_framework import serializers
 from .models import (
     Table
 )
+from bill.models import Bill
 from order.models import Order
 from django.db.models import Count, Sum, F
 from item.serializers import (
@@ -44,9 +45,9 @@ class TablewithoBilldataSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_total_amount(self, obj):
-        total_amount = Order.objects.filter(table__id = obj.id).aggregate(amount = Sum(F("item__price")*F("quantity")))
+        total_amount = Order.objects.filter(table__id = obj.id).exclude(id__in=Bill.objects.filter(table__id=obj.id).values("orders")).aggregate(amount = Sum(F("item__price")*F("quantity")))
         return total_amount["amount"]
     
     def get_orders(self, obj):
-        pass
-    
+        orders = Order.objects.filter(table__id = obj.id).exclude(id__in=Bill.objects.filter(table__id=obj.id).values("orders")).all()
+        return OrderSerializer(orders, many=True).data

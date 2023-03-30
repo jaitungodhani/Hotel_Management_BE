@@ -34,7 +34,8 @@ class Bill(DateMixin, models.Model):
     )
     orders = models.ManyToManyField(
         Order,
-        verbose_name=_("orders")
+        verbose_name=_("orders"),
+        related_name="orders_for_bill"
     )
     payment_type = models.CharField(
         verbose_name=_("Payment Type"),

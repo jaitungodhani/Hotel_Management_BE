@@ -22,7 +22,7 @@ class BillCreateSerializer(serializers.ModelSerializer):
     def validate(self, attrs):
         orders = attrs["orders"]
         for order in orders:
-            if Order.objects.filter(status="Delivered", id=str(order)).exists():
+            if Order.objects.filter(status__in = ["Waiting", "Prepairing", "Cooked"], id=str(order)).exists():
                 raise serializers.ValidationError(f"All orders not Delivered, first Delivered this {str(order)}!!!")
         return attrs
         
