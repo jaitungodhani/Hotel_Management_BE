@@ -23,7 +23,7 @@ class TablewithorderstatusSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def get_orders(slef, obj):
-        orders = Order.objects.filter(table__id = obj.id).values("status").annotate(count = Count("status"))
+        orders = Order.objects.filter(table__id = obj.id).exclude(id__in=Bill.objects.filter(table__id=obj.id).values("orders")).values("status").annotate(count = Count("status"))
         return orders
 
 

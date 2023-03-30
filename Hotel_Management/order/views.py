@@ -14,12 +14,12 @@ from django_filters.rest_framework import DjangoFilterBackend
 from utils.response_handler import ResponseMsg
 from rest_framework.response import Response
 from rest_framework import permissions
-
+from bill.models import Bill
 
 # Create your views here.
 
 class OrderManageView(viewsets.ModelViewSet):
-    queryset = Order.objects.all()
+    queryset = Order.objects.exclude(id__in=Bill.objects.all().values("orders")).all()
     serializer_class = OrderSerializer
     permission_classes = [IsAdmin | IsWaiter | IsManager]
     filter_backends = [
@@ -36,6 +36,8 @@ class OrderManageView(viewsets.ModelViewSet):
     
 
     def get_permissions(self):
+        if self.action in ["list","retrieve"]:
+            self.permission_classes = [IsAdmin]
         if self.action in ["create","destroy"]:
             self.permission_classes = [IsAdmin | IsWaiter]
         return super(OrderManageView, self).get_permissions()
@@ -69,4 +71,9 @@ class OrderManageView(viewsets.ModelViewSet):
         response_data = super(OrderManageView, self).partial_update(request, *args, **kwargs)
         response = ResponseMsg(error=False, data=response_data.data, message="Order update Successfully!!!!")
         return Response(response.response)
+    
+    
+    
+
+
 

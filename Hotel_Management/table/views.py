@@ -15,8 +15,12 @@ from rest_framework import filters
 from utils.response_handler import ResponseMsg
 from rest_framework.response import Response
 from rest_framework.decorators import action
-from rest_framework import permissions
-
+import qrcode
+from PIL import Image
+import base64
+from io import BytesIO
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 # Create your views here.
 
@@ -77,6 +81,61 @@ class TableManageView(viewsets.ModelViewSet):
         serializer = TablewithoBilldataSerializer(self.get_queryset(), many=True)
         response = ResponseMsg(error=False, data=serializer.data, message="Get Table data Successfully!!!!")
         return Response(response.response)
+    
+
+    @swagger_auto_schema(
+        manual_parameters=[
+            openapi.Parameter(
+                name='table_id',
+                in_=openapi.IN_QUERY,
+                required=True,
+                type=openapi.TYPE_STRING,
+                description='Table Id'
+            )
+        ]
+    )
+    @action(
+        methods=["get"],
+        detail=False,
+        permission_classes=[IsAdmin | IsBillDesk]
+    )
+    def table_base_bill_qrcode(self, request):
+        table_id = request.query_params.get("table_id", None)
+        if not table_id:
+            raise Exception("Please pass table_id")
+        try:
+            table_obj = Table.objects.get(id = table_id)
+        except Table.DoesNotExist:
+            raise Exception("table not exist, please check")
+        serializer = TablewithoBilldataSerializer(table_obj)
+
+        height = 250
+        width = 250
+        
+
+        qr = qrcode.QRCode(
+            version=1,
+            error_correction=qrcode.constants.ERROR_CORRECT_H,  # L -> M -> Q -> H
+            box_size=4,
+            border=2,
+        )
+
+        # qr.add_data('upi://pay?pa='+upi_id +
+        #             '&pn='+str(name_ac)+'&am='+str(amount)+'&cu=INR')
+
+        qr.add_data('upi://pay?pa=jaitungodhani229@oksbi&pn=jaitun&am='+str(serializer.data["total_amount"])+'&cu=INR')
+
+            # Setting fit=True ensures the minimum size.
+        qr.make(fit=str(height)+'x'+str(width))
+
+        img = qr.make_image(fill_color="black", back_color="white").convert('RGB')
+       
+        buffered = BytesIO()
+        img.save(buffered, format="PNG")
+        img_str = base64.b64encode(buffered.getvalue()).decode()
+        response = ResponseMsg(error=False, data=f"data:file/png;base64,{img_str}", message="get data Successfully!!!!")
+        return Response(response.response)
+        
     
 
 

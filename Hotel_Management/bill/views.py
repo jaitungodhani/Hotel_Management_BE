@@ -11,7 +11,7 @@ from core.permissions import (
     IsAdmin
 )
 from rest_framework import filters
-
+from rest_framework.decorators import action
 # Create your views here.
 
 
@@ -55,3 +55,7 @@ class BillManageView(viewsets.ModelViewSet):
         response_data = super(BillManageView, self).partial_update(request, *args, **kwargs)
         response = ResponseMsg(error=False, data=response_data.data, message="Bill update Successfully!!!!")
         return Response(response.response)
+    
+
+    
+        
