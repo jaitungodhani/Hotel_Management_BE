@@ -1,0 +1,16 @@
+{% extends "admin/base.html" %}
+
+{% load static %}
+
+{% block title %}{{ title }} | {{ site_title|default:_('Django site admin') }}{% endblock %}
+
+{% block branding %}
+<h1 id="site-name">
+    <a href="{% url 'admin:index' %}">
+        <img src="https://res.cloudinary.com/drfdjango/image/upload/v1680432951/hotel_management/media/profile_photos/image_context_unnkdw.jpg" height="40px" />
+        <h3>Hotel Management System</h3>
+    </a>
+</h1>
+{% endblock %}
+
+{% block nav-global %}{% endblock %}
