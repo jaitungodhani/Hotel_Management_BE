@@ -34,6 +34,11 @@ class ItemManageView(viewsets.ModelViewSet):
         if self.action in ["create","update","partial_update"]:
             self.serializer_class = ItemCreateSerializer
         return super(ItemManageView, self).get_serializer_class()
+    
+    def get_permissions(self):
+        if self.action in ["list"]:
+            self.permission_classes = [IsWaiter | IsAdmin]
+        return super(ItemManageView, self).get_permissions()
 
     def list(self, request, *args, **kwargs):
         response_data = super(ItemManageView, self).list(request, *args, **kwargs)

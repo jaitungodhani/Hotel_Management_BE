@@ -37,9 +37,11 @@ class OrderManageView(viewsets.ModelViewSet):
 
     def get_permissions(self):
         if self.action in ["list","retrieve"]:
-            self.permission_classes = [IsAdmin]
+            self.permission_classes = [IsAdmin | IsManager]
         if self.action in ["create","destroy"]:
             self.permission_classes = [IsAdmin | IsWaiter]
+        if self.action in ["update", "partial_update"]:
+            self.permission_classes = [IsAdmin | IsWaiter | IsManager]
         return super(OrderManageView, self).get_permissions()
     
     def get_serializer_class(self):
