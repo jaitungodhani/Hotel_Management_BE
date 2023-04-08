@@ -13,7 +13,7 @@ def create_update_order_signal(sender, instance, created, **kwargs):
     all_table_obj = Table.objects.all()
     OrderConsumer.external_group_send(room_name="waiter", content=TablewithorderdataSerializer(all_table_obj , many=True).data)
     OrderConsumer.external_group_send(room_name="manager", content=OrderSerializer(all_order_obj, many=True).data)
-    OrderConsumer.external_group_send(room_name="bill_desk", content=TablewithorderdataSerializer(all_table_obj , many=True).data)
+    OrderConsumer.external_group_send(room_name="bill_desk", content={"type": "current_bill", "data":TablewithorderdataSerializer(all_table_obj , many=True).data})
 
 @receiver(pre_delete, sender=Order)
 def delete_signal(sender, instance, using, **kwargs):
@@ -21,4 +21,4 @@ def delete_signal(sender, instance, using, **kwargs):
     all_table_obj = Table.objects.all()
     OrderConsumer.external_group_send(room_name="waiter", content=TablewithorderdataSerializer(all_table_obj , many=True).data)
     OrderConsumer.external_group_send(room_name="manager", content=OrderSerializer(all_order_obj, many=True).data)
-    OrderConsumer.external_group_send(room_name="bill_desk", content=TablewithorderdataSerializer(all_table_obj , many=True).data)
+    OrderConsumer.external_group_send(room_name="bill_desk", content={"type": "current_bill", "data":TablewithorderdataSerializer(all_table_obj , many=True).data})
