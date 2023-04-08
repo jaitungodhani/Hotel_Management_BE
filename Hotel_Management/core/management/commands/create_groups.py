@@ -1,6 +1,6 @@
 from django.core.management.base import BaseCommand, CommandError
 from django.contrib.auth.models import Group
-GROUPS = ['Waiter', 'Manager', 'Bill Desk', 'Admin']
+GROUPS = ['waiter', 'manager', 'bill_desk', 'admin']
 
 class Command(BaseCommand):
 

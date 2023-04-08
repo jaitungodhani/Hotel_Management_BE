@@ -1,0 +1,16 @@
+Waiter
+
+<script>
+    let socket = new WebSocket('ws://127.0.0.1:9999/ws/order/waiter/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgwOTQwNDMwLCJpYXQiOjE2ODA5Mzg2MzAsImp0aSI6ImM0MzVhYzQ5ZTk4ZDRmYjc4YTU1ZjM1Y2NmNjU3ZjUwIiwiZW1haWxfaWQiOiJ3YWl0ZXJAZ21haWwuY29tIn0.h1KT2hBgh9jY-MgEyy490Sx-ZL4TXHoVOlyQ0otTBJY');
+    socket.onopen = function (e) {
+      console.log('Connection established!');
+    };
+  
+    socket.onmessage = function (e) {
+      var data = JSON.parse(e.data)
+      console.log(data)
+    };
+    socket.onclose = function (e) {
+      console.log('Connection closed');
+    };
+</script>

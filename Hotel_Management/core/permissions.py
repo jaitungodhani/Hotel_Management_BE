@@ -12,7 +12,7 @@ def _has_group_permission(user, required_groups):
     return any([_is_in_group(user,group_name) for group_name in required_groups])
 
 class IsWaiter(permissions.BasePermission):
-    required_groups = ["Waiter"]
+    required_groups = ["waiter"]
 
     def has_permission(self, request, view):
         has_group_permission = _has_group_permission(request.user, self.required_groups)
@@ -20,7 +20,7 @@ class IsWaiter(permissions.BasePermission):
 
 
 class IsManager(permissions.BasePermission):
-    required_groups = ["Manager"]
+    required_groups = ["manager"]
 
     def has_permission(self, request, view):
         has_group_permission = _has_group_permission(request.user, self.required_groups)
@@ -28,14 +28,14 @@ class IsManager(permissions.BasePermission):
 
 
 class IsBillDesk(permissions.BasePermission):
-    required_groups = ["Bill Desk"]
+    required_groups = ["bill_desk"]
 
     def has_permission(self, request, view):
         has_group_permission = _has_group_permission(request.user, self.required_groups)
         return request.user and has_group_permission
 
 class IsAdmin(permissions.BasePermission):
-    required_groups = ["Admin"]
+    required_groups = ["admin"]
 
     def has_permission(self, request, view):
         has_group_permission = _has_group_permission(request.user, self.required_groups)

@@ -2,8 +2,7 @@ from django.shortcuts import render
 from .models import Table
 from .serializers import (
     TableSerializer,
-    TablewithorderstatusSerializer,
-    TablewithoBilldataSerializer
+    TablewithorderdataSerializer
 )
 from rest_framework import viewsets
 from core.permissions import (
@@ -64,23 +63,23 @@ class TableManageView(viewsets.ModelViewSet):
     @action(
         methods=["get"],
         detail=False,
-        permission_classes = [IsWaiter | IsAdmin]
+        permission_classes = [IsWaiter | IsAdmin | IsBillDesk]
     )
-    def tabledata_with_orderstatuscountdata(self, request):
-        serializer = TablewithorderstatusSerializer(self.get_queryset(), many=True)
+    def tabledata_with_order_data(self, request):
+        serializer = TablewithorderdataSerializer(self.get_queryset(), many=True)
         response = ResponseMsg(error=False, data=serializer.data, message="Get Table data Successfully!!!!")
         return Response(response.response)
     
 
-    @action(
-        methods=["get"],
-        detail=False,
-        permission_classes = [IsBillDesk]
-    )
-    def tableBillData(self, request):
-        serializer = TablewithoBilldataSerializer(self.get_queryset(), many=True)
-        response = ResponseMsg(error=False, data=serializer.data, message="Get Table data Successfully!!!!")
-        return Response(response.response)
+    # @action(
+    #     methods=["get"],
+    #     detail=False,
+    #     permission_classes = [IsBillDesk | IsAdmin]
+    # )
+    # def tableBillData(self, request):
+    #     serializer = TablewithoBilldataSerializer(self.get_queryset(), many=True)
+    #     response = ResponseMsg(error=False, data=serializer.data, message="Get Table data Successfully!!!!")
+    #     return Response(response.response)
     
 
     @swagger_auto_schema(
@@ -107,7 +106,7 @@ class TableManageView(viewsets.ModelViewSet):
             table_obj = Table.objects.get(id = table_id)
         except Table.DoesNotExist:
             raise Exception("table not exist, please check")
-        serializer = TablewithoBilldataSerializer(table_obj)
+        serializer = TablewithorderdataSerializer(table_obj)
 
         height = 250
         width = 250
@@ -125,7 +124,6 @@ class TableManageView(viewsets.ModelViewSet):
 
         qr.add_data('upi://pay?pa=jaitungodhani229@oksbi&pn=jaitun&am='+str(serializer.data["total_amount"])+'&cu=INR')
 
-            # Setting fit=True ensures the minimum size.
         qr.make(fit=str(height)+'x'+str(width))
 
         img = qr.make_image(fill_color="black", back_color="white").convert('RGB')

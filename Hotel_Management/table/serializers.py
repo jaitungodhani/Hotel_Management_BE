@@ -15,17 +15,6 @@ class TableSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 
-class TablewithorderstatusSerializer(serializers.ModelSerializer):
-    orders = serializers.SerializerMethodField(read_only = True)
-
-    class Meta:
-        model = Table
-        fields = "__all__"
-
-    def get_orders(slef, obj):
-        orders = Order.objects.filter(table__id = obj.id).exclude(id__in=Bill.objects.filter(table__id=obj.id).values("orders")).values("status").annotate(count = Count("status"))
-        return orders
-
 
 class OrderSerializer(serializers.ModelSerializer):
     item = ItemSerializer(read_only=True)
@@ -34,20 +23,24 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = "__all__"
     
-    
 
-class TablewithoBilldataSerializer(serializers.ModelSerializer):
+class TablewithorderdataSerializer(serializers.ModelSerializer):
     orders = serializers.SerializerMethodField()
     total_amount = serializers.SerializerMethodField()
-
+    status_based_order_count = serializers.SerializerMethodField()
+   
     class Meta:
         model = Table
         fields = "__all__"
 
     def get_total_amount(self, obj):
         total_amount = Order.objects.filter(table__id = obj.id).exclude(id__in=Bill.objects.filter(table__id=obj.id).values("orders")).aggregate(amount = Sum(F("item__price")*F("quantity")))
-        return total_amount["amount"]
+        return str(total_amount["amount"])
     
     def get_orders(self, obj):
         orders = Order.objects.filter(table__id = obj.id).exclude(id__in=Bill.objects.filter(table__id=obj.id).values("orders")).all()
         return OrderSerializer(orders, many=True).data
+    
+    def get_status_based_order_count(slef, obj):
+        orders = Order.objects.filter(table__id = obj.id).exclude(id__in=Bill.objects.filter(table__id=obj.id).values("orders")).values("status").annotate(count = Count("status"))
+        return list(orders)

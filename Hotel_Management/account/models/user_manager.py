@@ -24,7 +24,7 @@ class CustomUserManager(BaseUserManager):
             raise ValueError(_("Superuser must have is_superuser=True"))
         user = self.create_user(email, password, **extra_fields)
         try:
-            group = Group.objects.get(name = "Admin")
+            group = Group.objects.get(name = "admin")
         except Group.DoesNotExist:
-            raise Exception(f"Please add Admin Group")
+            raise Exception(f"Please add admin Group")
         return user.groups.add(group)

@@ -1,0 +1,22 @@
+Manager
+
+<script>
+    var user_id = '1'
+    let socket = new WebSocket('ws://127.0.0.1:9999/ws/order/manager/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgwOTQ1ODc1LCJpYXQiOjE2ODA5NDQwNzUsImp0aSI6ImUzYzM4NTA0OGUxZjQ1ZWE5ZGQ0M2Q4NWMzMDkwMTgyIiwiZW1haWxfaWQiOiJtYW5hZ2VyQGdtYWlsLmNvbSJ9.cNriBMUeozZLN2zfq5SNYtPPQcZXkkS_l5SLWM6v4w4');
+    socket.onopen = function (e) {
+      console.log('Connection established!');
+    };
+  
+    socket.onmessage = function (e) {
+      var data = JSON.parse(e.data)
+      console.log(data)
+    };
+    socket.onclose = function (e) {
+      console.log('Connection closed');
+    };
+  
+   
+  
+    
+  
+  </script>

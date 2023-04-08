@@ -1,0 +1,19 @@
+Bill Desk
+
+<script>
+    var user_id = '1'
+    let socket = new WebSocket('ws://127.0.0.1:9999/ws/order/bill_desk/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgwOTQ3MTAwLCJpYXQiOjE2ODA5NDUzMDAsImp0aSI6ImQ1NDkzMWY0NzExZjQ3ZDU4MTg2YjZiZGFlYTMxODNiIiwiZW1haWxfaWQiOiJiaWxsZGVza0BnbWFpbC5jb20ifQ.NV0wfTeRtyxh5CDpO1l_81pMrbpFTIcwGUHFmDj7O6Q');
+    socket.onopen = function (e) {
+      console.log('Connection established!');
+    };
+  
+    socket.onmessage = function (e) {
+      var data = JSON.parse(e.data)
+      console.log(data)
+    };
+    socket.onclose = function (e) {
+      console.log('Connection closed');
+    };
+  
+  
+</script>
