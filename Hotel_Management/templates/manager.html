@@ -2,7 +2,7 @@ Manager
 
 <script>
     var user_id = '1'
-    let socket = new WebSocket('ws://127.0.0.1:9999/ws/order/manager/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgwOTQ1ODc1LCJpYXQiOjE2ODA5NDQwNzUsImp0aSI6ImUzYzM4NTA0OGUxZjQ1ZWE5ZGQ0M2Q4NWMzMDkwMTgyIiwiZW1haWxfaWQiOiJtYW5hZ2VyQGdtYWlsLmNvbSJ9.cNriBMUeozZLN2zfq5SNYtPPQcZXkkS_l5SLWM6v4w4');
+    let socket = new WebSocket('ws://127.0.0.1:9999/ws/order/manager/?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNjgxMDk4MjM5LCJpYXQiOjE2ODEwOTc5MzksImp0aSI6ImFiOTg2OWFjMjRkODRhMWI5MWExNTc0ZTQ1NjUxZjllIiwiZW1haWxfaWQiOiJtYW5hZ2VyQGdtYWlsLmNvbSJ9.7nT9lcjkrzG-aQQZY1-rqzG4L-h4Aa3v6NOhDJtBdM8');
     socket.onopen = function (e) {
       console.log('Connection established!');
     };

@@ -3,18 +3,24 @@ from django.contrib.auth.models import AnonymousUser
 from channels.auth import AuthMiddlewareStack
 from channels.db import database_sync_to_async
 from urllib import parse
-
 from account.models import User
-
+import jwt
+from django.conf import settings
 
 @database_sync_to_async
 def get_user(token):
     try:
-        print("token:-",token)
+        print("token:-", token)
+        payload = jwt.decode(
+            token, settings.SECRET_KEY, algorithms=['HS256'])
         valid_data = TokenBackend(algorithm='HS256').decode(token, verify=False)
         return User.objects.get(email=valid_data['email_id'])
-    except User.DoesNotExist:
+    
+    except Exception as e:
+        print(e)
         return AnonymousUser()
+        
+
 
 class TokenAuthMiddleware:
     def __init__(self, inner):
