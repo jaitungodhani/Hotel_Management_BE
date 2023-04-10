@@ -48,7 +48,7 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'cloudinary_storage',
     'cloudinary',
-  
+
     'core',
     'account',
     'table',
@@ -196,19 +196,19 @@ SWAGGER_SETTINGS = {
 EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
-EMAIL_HOST_USER =  "jaitun.flyontechsolution@gmail.com"
+EMAIL_HOST_USER = "jaitun.flyontechsolution@gmail.com"
 EMAIL_HOST_PASSWORD = "rbezxxfeicxtkjvn"
 EMAIL_USE_TLS = True
 DEFAULT_SERVER_EMAIL = "jaitun.flyontechsolution@gmail.com"
 DEFAULT_ACCOUNT_EMAIL = "jaitun.flyontechsolution@gmail.com"
 
 
-#celery
+# celery
 CELERY_BROKER_URL = f"redis://127.0.0.1:6379"
 CELERY_RESULT_BACKEND = 'db+sqlite:///db.sqlite3'
 
 
-#cloudinary image storage
+# cloudinary image storage
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'drfdjango',
     'API_KEY': '625865289567944',
@@ -217,3 +217,54 @@ CLOUDINARY_STORAGE = {
 
 MEDIA_URL = 'hotel_management/media/'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+            "style": "{",
+        },
+        "simple": {
+            "format": "{levelname} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console_handler": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+        "my_handler": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": f"{BASE_DIR}/logs/blogthedata.log",
+            "mode": "a",
+            "encoding": "utf-8",
+            "formatter": "simple",
+            "backupCount": 5,
+            "maxBytes": 1024 * 1024 * 5,  # 5 MB
+        },
+        "my_handler_detailed": {
+            "class": "logging.handlers.RotatingFileHandler",
+            "filename": f"{BASE_DIR}/logs/blogthedata_detailed.log",
+            "mode": "a",
+            "formatter": "verbose",
+            "backupCount": 5,
+            "maxBytes": 1024 * 1024 * 5,  # 5 MB
+        },
+    },
+    "loggers": {
+        "django": {
+            "handlers": ["console_handler", "my_handler_detailed"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "django.request": {
+            "handlers": ["my_handler"],
+            "level": "WARNING",
+            "propagate": False,
+        },
+    },
+}
