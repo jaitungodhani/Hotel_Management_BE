@@ -219,52 +219,72 @@ MEDIA_URL = 'hotel_management/media/'
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
-LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "formatters": {
-        "verbose": {
-            "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
-            "style": "{",
-        },
-        "simple": {
-            "format": "{levelname} {message}",
-            "style": "{",
-        },
-    },
-    "handlers": {
-        "console_handler": {
-            "class": "logging.StreamHandler",
-            "formatter": "simple",
-        },
-        "my_handler": {
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": f"{BASE_DIR}/logs/blogthedata.log",
-            "mode": "a",
-            "encoding": "utf-8",
-            "formatter": "simple",
-            "backupCount": 5,
-            "maxBytes": 1024 * 1024 * 5,  # 5 MB
-        },
-        "my_handler_detailed": {
-            "class": "logging.handlers.RotatingFileHandler",
-            "filename": f"{BASE_DIR}/logs/blogthedata_detailed.log",
-            "mode": "a",
-            "formatter": "verbose",
-            "backupCount": 5,
-            "maxBytes": 1024 * 1024 * 5,  # 5 MB
-        },
-    },
-    "loggers": {
-        "django": {
-            "handlers": ["console_handler", "my_handler_detailed"],
-            "level": "INFO",
-            "propagate": False,
-        },
-        "django.request": {
-            "handlers": ["my_handler"],
-            "level": "WARNING",
-            "propagate": False,
-        },
-    },
-}
+# LOGGING = {
+#     "version": 1,
+#     "disable_existing_loggers": False,
+#     "formatters": {
+#         "verbose": {
+#             "format": "{levelname} {asctime} {module} {process:d} {thread:d} {message}",
+#             "style": "{",
+#         },
+#         "simple": {
+#             "format": "{levelname} {message}",
+#             "style": "{",
+#         },
+#     },
+#     "handlers": {
+#         "console_handler": {
+#             "class": "logging.StreamHandler",
+#             "formatter": "simple",
+#         },
+#         "my_handler": {
+#             "class": "logging.handlers.RotatingFileHandler",
+#             "filename": f"{BASE_DIR}/logs/blogthedata.log",
+#             "mode": "a",
+#             "encoding": "utf-8",
+#             "formatter": "simple",
+#             "backupCount": 5,
+#             "maxBytes": 1024 * 1024 * 5,  # 5 MB
+#         },
+#         "my_handler_detailed": {
+#             "class": "logging.handlers.RotatingFileHandler",
+#             "filename": f"{BASE_DIR}/logs/blogthedata_detailed.log",
+#             "mode": "a",
+#             "formatter": "verbose",
+#             "backupCount": 5,
+#             "maxBytes": 1024 * 1024 * 5,  # 5 MB
+#         },
+#     },
+#     "loggers": {
+#         "django": {
+#             "handlers": ["console_handler", "my_handler_detailed"],
+#             "level": "INFO",
+#             "propagate": False,
+#         },
+#         "django.request": {
+#             "handlers": ["my_handler"],
+#             "level": "WARNING",
+#             "propagate": False,
+#         },
+#     },
+# }
+
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+
+sentry_sdk.init(
+    dsn="https://1f73530a5e7742e1b6e468921058d5e1@o4504994316812288.ingest.sentry.io/4504994320416768",
+    integrations=[
+        DjangoIntegration(),
+    ],
+
+    # Set traces_sample_rate to 1.0 to capture 100%
+    # of transactions for performance monitoring.
+    # We recommend adjusting this value in production.
+    traces_sample_rate=1.0,
+
+    # If you wish to associate users to errors (assuming you are using
+    # django.contrib.auth) you may enable sending PII data.
+    send_default_pii=True
+)

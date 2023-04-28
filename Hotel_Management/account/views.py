@@ -102,7 +102,7 @@ class ManageUserView(viewsets.ModelViewSet):
         serializer_class = ResetPasswordSerializer
     )
     def reset_password(self, request):
-        serializer = ResetPasswordSerializer(data = request.data, context={"request":request})
+        serializer = ResetPasswordSerializer(data = request.data)
         serializer.is_valid(raise_exception=True)
         serializer.set_password()
         response = ResponseMsg(error=False, data={}, message="Password Reset Successfully!!!!")
