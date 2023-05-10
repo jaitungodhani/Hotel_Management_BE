@@ -182,6 +182,8 @@ SIMPLE_JWT = {
     "USER_ID_CLAIM": "email_id"
 }
 
+
+# For add Jwt authentication in swagger
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         "Auth Token eg [Bearer (JWT)]": {
