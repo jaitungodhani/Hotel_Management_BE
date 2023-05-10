@@ -59,8 +59,8 @@ class BillPdfGenerator:
             f"Bill No          :-  {str(self.bill_data['bill_no'])}")
         pdf.drawString(45, 560,
             f"Date & Time :-  {str(self.bill_data['date_time'])}")
-        logo = ImageReader('https://res.cloudinary.com/drfdjango/image/upload/v1680432951/hotel_management/media/profile_photos/image_context_unnkdw.jpg')
-        pdf.drawImage(logo, 215, 670, width=200, height=100)
+#         logo = ImageReader('https://res.cloudinary.com/drfdjango/image/upload/v1680432951/hotel_management/media/profile_photos/image_context_unnkdw.jpg')
+#         pdf.drawImage(logo, 215, 670, width=200, height=100)
         pdf.setLineWidth(2)
         pdf.line(40, 650, 580, 650)
         pdf.setLineWidth(1)
