@@ -199,7 +199,7 @@ EMAIL_BACKEND = 'django_smtp_ssl.SSLEmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
 EMAIL_HOST_USER = "jaitun.flyontechsolution@gmail.com"
-EMAIL_HOST_PASSWORD = "rbezxxfeicxtkjvn"
+EMAIL_HOST_PASSWORD = "******"
 EMAIL_USE_TLS = True
 DEFAULT_SERVER_EMAIL = "jaitun.flyontechsolution@gmail.com"
 DEFAULT_ACCOUNT_EMAIL = "jaitun.flyontechsolution@gmail.com"
@@ -213,8 +213,8 @@ CELERY_RESULT_BACKEND = 'db+sqlite:///db.sqlite3'
 # cloudinary image storage
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'drfdjango',
-    'API_KEY': '625865289567944',
-    'API_SECRET': 'FXHzvgBmnFpQ4ZFLXgLZYIEqv8s',
+    'API_KEY': '****',
+    'API_SECRET': '*****',
 }
 
 MEDIA_URL = 'hotel_management/media/'
